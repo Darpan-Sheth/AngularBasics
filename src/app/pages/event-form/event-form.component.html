@@ -1,0 +1,160 @@
+<form class="add-event-form" (ngSubmit)="onSubmit(form)" #form="ngForm" novalidate>
+  <h3><label>Add Event</label></h3>  
+  <div class="form-group">
+      <input type="text" [(ngModel)]="eventName" #eventNameRef="ngModel" name="eventName" class="form-control" placeholder="Event Title" required>
+      <div *ngIf="eventNameRef.invalid && (eventNameRef.dirty || eventNameRef.touched || formSubmit)" class="alert alert-danger">
+        <div *ngIf="eventNameRef.errors.required">
+            Event name is required.
+        </div>
+      </div>
+  </div>
+  <!-- <div class="row">
+    <div class="col col-12"> -->
+        <div class="row calendar-row">
+            <div class="col col-2">
+                <div class="form-group">
+                    <div class="input-group">
+                        <input class="form-control" placeholder="yyyy-mm-dd"
+                                name="fromDate" [(ngModel)]="fromDate" ngbDatepicker #d="ngbDatepicker">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col col-2">
+                <div class="input-group">
+                    <ngb-timepicker [(ngModel)]="fromTime" name="fromTime" style="margin-top: -40px;" [disabled]="this.AllDayChk"></ngb-timepicker>
+                </div>
+            </div>
+            <div class="col col-1">
+                To        
+            </div>
+            <div class="col col-2">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input class="form-control" placeholder="yyyy-mm-dd"
+                                    name="toDate" [(ngModel)]="toDate" ngbDatepicker #d2="ngbDatepicker">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary calendar" (click)="d2.toggle()" type="button"></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col col-2">
+                    <div class="input-group">
+                        <ngb-timepicker [(ngModel)]="toTime" name="toTime" style="margin-top: -40px;" [disabled]="this.AllDayChk"></ngb-timepicker>
+                    </div>
+                </div>
+        </div>
+        <div class="row">    
+            <input type="checkbox" [(ngModel)]="AllDayChk" name="AllDayChk" (click)="allDayClick()" class="add-day-chkbox">All Day
+        </div>
+    <!-- </div>
+  </div> -->
+  <h3><label>Event Details</label></h3>
+  <div class="row">
+
+    <div class="col col-6">
+        <div class="form-group">
+            <div class="input-group">
+                <input type="text" class="form-control" name="searchAddress" (keyup)="getSearchKey()" placeholder="Search Address" [(ngModel)]="searchAddress">
+                <app-search [searchResult] = "searchResults" *ngIf="showSearhResult" (onAddressPicked)="onAddressPicked($event)"></app-search>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="input-group">
+                <input type="email" email #evntEmail = "ngModel" class="form-control" name="email" placeholder="Email" [(ngModel)]="eventEmail">
+            </div>
+            <div *ngIf="evntEmail.invalid && (evntEmail.dirty || evntEmail.touched || formSubmit)" class="alert alert-danger">
+                <div *ngIf="evntEmail.errors.email">
+                    Please enter valid email.
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="input-group">
+                <textarea class="form-control" name="eventDetails" [(ngModel)]="eventDetails">Details</textarea>
+            </div>
+        </div>
+    </div>
+    <div class="col col-6">
+        <div class="row">
+            <div class="col col-8">
+                <div class="input-group">
+                    <input type="email" email #gstEmail="ngModel" class="form-control" [(ngModel)]="guestEmail" name="guestEmail" placeholder="Add Guest Email">
+                </div>
+                <div *ngIf="gstEmail.invalid && (gstEmail.dirty || gstEmail.touched || formSubmit)" class="alert alert-danger"> 
+                    <div *ngIf="gstEmail.errors.email">
+                        Please enter valid email.
+                    </div>
+                </div>
+            </div>
+            <div class="col col-4">
+                <button type="button" class="btn btn-info" (click)="addGusetEmail()">Add</button>        
+            </div>
+        </div>
+        <div class="row">
+            <div class="col col-12">
+                <table class="table event-list table-striped"> 
+                    <tr *ngFor="let email of guestEmailArray">
+                        <td> {{ email }} </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+  </div>
+  <input type="submit" class="btn btn-info" value="Submit">
+
+</form>
+<table class="table event-list table-striped">
+    <thead>
+        <tr>
+            <th>
+                Action
+            </th>
+            <th>
+                Event Name
+            </th> 
+            <th>
+                Start Date - Time
+            </th>
+            <th>
+                End Date - Time
+            </th>
+            <th>
+                Address
+            </th>
+            <th>
+                Email
+            </th>
+            <th>
+                Description
+            </th>
+        </tr>
+    </thead>
+    <tr *ngFor="let event of formDataArray">
+        <td>
+            <button class="btn btn-danger" (click)="deleteEvent(event?.id)">delete</button>
+        </td>
+        <td>
+            {{event?.eventName}}
+        </td>
+        <td>
+            {{event?.fromDate?.day}}-{{event?.fromDate?.month}}-{{event?.fromDate?.year}} &nbsp; {{event?.fromTime?.hour}}:{{event?.fromTime?.minute}}
+        </td>
+        <td>
+            {{event?.toDate?.day}}-{{event?.toDate?.month}}-{{event?.toDate?.year}} &nbsp; {{event?.toTime?.hour}}:{{event?.toTime?.minute}}
+        </td>
+        <td>
+            {{event?.searchAddress}}
+        </td>
+        <td>
+            {{event?.email}}
+        </td>
+        <td>
+            {{event?.eventDetails}}
+        </td>
+    </tr>
+</table>

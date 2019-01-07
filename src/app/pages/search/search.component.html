@@ -1,0 +1,9 @@
+ <div class="container" #mainContainer>
+   <div class="panel">
+    <table class="table event-list table-striped">
+      <tr *ngFor="let address of searchResult" (click)="getAddress(address.description)">
+          <td>{{address.description}}</td>
+      </tr>
+    </table>
+  </div>
+</div>
